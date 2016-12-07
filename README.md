@@ -1,2 +1,2 @@
-# ZK-samples
-ZooKeeper samples
+# zookeeper-samples
+ZooKeeper study sample codes.
