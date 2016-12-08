@@ -19,12 +19,7 @@ public class BaseConfigDemo {
     protected String address;
     protected int timeout;
 
-    public static void main(String[] args) {
-
-        new BaseConfigDemo().start();
-    }
-
-    protected void start(){
+    protected void init(){
         try {
             Properties props = PropertyUtils.load("zookeeper.properties");
             address = props.getProperty("address");
@@ -32,13 +27,9 @@ public class BaseConfigDemo {
 
             logger.info("address:{}, timeout:{}", address, timeout);
 
-            start0();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    protected void start0() throws IOException {
-
-    }
 }
