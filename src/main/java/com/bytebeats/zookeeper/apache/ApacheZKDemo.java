@@ -1,6 +1,5 @@
 package com.bytebeats.zookeeper.apache;
 
-import com.bytebeats.zookeeper.BaseConfigDemo;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;

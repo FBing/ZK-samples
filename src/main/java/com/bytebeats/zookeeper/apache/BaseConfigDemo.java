@@ -1,4 +1,4 @@
-package com.bytebeats.zookeeper;
+package com.bytebeats.zookeeper.apache;
 
 import com.bytebeats.zookeeper.util.PropertyUtils;
 import org.slf4j.Logger;
