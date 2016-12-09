@@ -7,6 +7,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.UriSpec;
 
+import java.util.concurrent.locks.LockSupport;
+
 /**
  * ${DESCRIPTION}
  *
@@ -37,6 +39,8 @@ public class ServerApp {
             serviceRegistry.registerService(host1);
 
             System.out.println("register service success...");
+
+            LockSupport.park();
 
         } catch (Exception e) {
             e.printStackTrace();

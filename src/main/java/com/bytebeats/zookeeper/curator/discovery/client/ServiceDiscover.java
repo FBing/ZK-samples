@@ -1,13 +1,13 @@
 package com.bytebeats.zookeeper.curator.discovery.client;
 
 import com.bytebeats.zookeeper.curator.discovery.domain.ServiceNode;
-import com.bytebeats.zookeeper.curator.discovery.serializer.ServiceNodeSerializer;
 import com.google.common.collect.Maps;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.ServiceProvider;
+import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.strategies.RandomStrategy;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class ServiceDiscover {
         serviceDiscovery = ServiceDiscoveryBuilder.builder(ServiceNode.class)
                 .client(client)
                 .basePath(basePath)
-                .serializer(new ServiceNodeSerializer())
+                .serializer(new JsonInstanceSerializer<>(ServiceNode.class))
                 .build();
     }
 

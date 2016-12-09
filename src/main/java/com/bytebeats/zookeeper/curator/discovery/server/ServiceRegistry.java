@@ -6,6 +6,7 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
+import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 
 /**
  * ${DESCRIPTION}
@@ -23,7 +24,7 @@ public class ServiceRegistry {
         this.client = client;
         serviceDiscovery = ServiceDiscoveryBuilder.builder(ServiceNode.class)
                 .client(client)
-                .serializer(new ServiceNodeSerializer())
+                .serializer(new JsonInstanceSerializer<>(ServiceNode.class))
                 .basePath(basePath)
                 .build();
     }
