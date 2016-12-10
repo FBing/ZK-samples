@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ${DESCRIPTION}
+ * 模拟服务消费者
  *
  * @author Ricky Fung
  * @create 2016-12-08 20:13

@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ${DESCRIPTION}
+ * 模拟服务提供者
  *
  * @author Ricky Fung
  * @create 2016-12-08 19:24
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerApp {
 
     public static final String BASE_PATH = "services";
-    public static final String SERVICE_NAME = "HelloService";
+    public static final String SERVICE_NAME = "com.bytebeats.service.HelloService";
 
     public static void main(String[] args) {
 
