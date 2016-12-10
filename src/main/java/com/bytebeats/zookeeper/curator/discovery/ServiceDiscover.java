@@ -1,7 +1,6 @@
-package com.bytebeats.zookeeper.curator.discovery.client;
+package com.bytebeats.zookeeper.curator.discovery;
 
-import com.bytebeats.zookeeper.curator.discovery.domain.ServiceNode;
-import com.google.common.collect.Maps;
+import com.bytebeats.zookeeper.curator.discovery.domain.ServerPayload;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
@@ -12,23 +11,23 @@ import org.apache.curator.x.discovery.strategies.RandomStrategy;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * ${DESCRIPTION}
+ * 服务发现
  *
  * @author Ricky Fung
  * @create 2016-12-08 20:04
  */
 public class ServiceDiscover {
-    private ServiceDiscovery<ServiceNode> serviceDiscovery;
-    private Map<String, ServiceProvider<ServiceNode>> providers = Maps.newHashMap();
-    private final Object lock = new Object();
+    private ServiceDiscovery<ServerPayload> serviceDiscovery;
+    private final ConcurrentHashMap<String, ServiceProvider<ServerPayload>> serviceProviderMap = new ConcurrentHashMap<>();
 
     public ServiceDiscover(CuratorFramework client , String basePath){
-        serviceDiscovery = ServiceDiscoveryBuilder.builder(ServiceNode.class)
+        serviceDiscovery = ServiceDiscoveryBuilder.builder(ServerPayload.class)
                 .client(client)
                 .basePath(basePath)
-                .serializer(new JsonInstanceSerializer<>(ServiceNode.class))
+                .serializer(new JsonInstanceSerializer<>(ServerPayload.class))
                 .build();
     }
 
@@ -37,19 +36,19 @@ public class ServiceDiscover {
      * Since the internal NamespaceWatcher objects added by the service provider cannot be removed in Zookeeper 3.4.x,
      * creating a fresh service provider for each call to the same service will eventually exhaust the memory of the JVM.
      */
-    public ServiceInstance<ServiceNode> getServiceInstance(String serviceName) throws Exception {
-        ServiceProvider<ServiceNode> provider = providers.get(serviceName);
+    public ServiceInstance<ServerPayload> getServiceProvider(String serviceName) throws Exception {
+        ServiceProvider<ServerPayload> provider = serviceProviderMap.get(serviceName);
         if (provider == null) {
-            synchronized (lock) {
-                provider = providers.get(serviceName);
-                if (provider == null) {
-                    provider = serviceDiscovery.serviceProviderBuilder().
-                            serviceName(serviceName).
-                            providerStrategy(new RandomStrategy<ServiceNode>())
-                            .build();
-                    provider.start();
-                    providers.put(serviceName, provider);
-                }
+            provider = serviceDiscovery.serviceProviderBuilder().
+                    serviceName(serviceName).
+                    providerStrategy(new RandomStrategy<ServerPayload>())
+                    .build();
+
+            ServiceProvider<ServerPayload> oldProvider = serviceProviderMap.putIfAbsent(serviceName, provider);
+            if (oldProvider != null) {
+                provider = oldProvider;
+            }else {
+                provider.start();
             }
         }
 
@@ -62,7 +61,7 @@ public class ServiceDiscover {
 
     public void close() throws IOException {
 
-        for (Map.Entry<String, ServiceProvider<ServiceNode>> me : providers.entrySet()){
+        for (Map.Entry<String, ServiceProvider<ServerPayload>> me : serviceProviderMap.entrySet()){
             try{
                 me.getValue().close();
             }catch (Exception e){

@@ -4,6 +4,9 @@ import com.bytebeats.zookeeper.curator.CuratorUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.data.Stat;
+
+import java.nio.charset.Charset;
 
 /**
  * ${DESCRIPTION}
@@ -14,6 +17,8 @@ import org.apache.zookeeper.ZooDefs;
 public class CuratorDemo {
 
     private String path = "/pandora/app2/consumer";
+
+    public static final Charset CHARSET = Charset.forName("UTF-8");
 
     public static void main(String[] args) {
 
@@ -31,22 +36,22 @@ public class CuratorDemo {
         try{
             client.start();
 
-            if(client.checkExists().forPath(path)!=null){
-                System.out.println("path: "+path+" exists");
+            Stat stat = client.checkExists().forPath(path);
+            if(stat==null){
+                System.out.println("exec create path:"+path);
+                client.create()
+                        .creatingParentContainersIfNeeded()
+                        .withMode(CreateMode.PERSISTENT)
+                        .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)
+                        .forPath(path, "hello, zk".getBytes(CHARSET));
             }else {
-                System.out.println("path: "+path+" not exists");
+                System.out.println("path: "+path+" exists");
             }
 
-            client.create()
-                    .creatingParentContainersIfNeeded()
-                    .withMode(CreateMode.PERSISTENT)
-                    .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)
-                    .forPath(path, "hello, zk".getBytes());
-
             byte[] buf = client.getData().forPath(path);
-            System.out.println("get data path:"+path+", data:"+new String(buf));
+            System.out.println("get data path:"+path+", data:"+new String(buf, CHARSET));
 
-            client.setData().forPath(path, "ricky".getBytes());
+            client.setData().inBackground().forPath(path, "ricky".getBytes(CHARSET));
 
 
             //级联删除
