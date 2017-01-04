@@ -1,2 +1,2 @@
-# zookeeper-samples
-ZooKeeper study sample codes.
+# zookeeper-in-action
+ZooKeeper practice code with [Apache Curator] (http://curator.apache.org/) .
