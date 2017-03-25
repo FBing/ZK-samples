@@ -1,5 +1,5 @@
 <configuration debug="false">
-    <contextName>Netty4-samples</contextName>
+    <contextName>apache-zk-sample</contextName>
     <property name="log_dir" value="D:/logs/" />
     <property name="max_history" value="360" />
 
@@ -11,10 +11,10 @@
 
     <!-- 按照每天生成日志文件 -->
     <appender name="Info"  class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log_dir}/info/netty4-samples-info.log</file>
+        <file>${log_dir}/info/apache-zk-sample-info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>${log_dir}/info/netty4-samples-%d{yyyy-MM-dd}-info.log</FileNamePattern>
+            <FileNamePattern>${log_dir}/info/apache-zk-sample-%d{yyyy-MM-dd}-info.log</FileNamePattern>
             <!--日志文件保留天数-->
             <MaxHistory>${max_history}</MaxHistory>
         </rollingPolicy>
